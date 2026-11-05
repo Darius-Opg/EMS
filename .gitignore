@@ -1,0 +1,21 @@
+#maven
+target/
+/bin/
+
+#Java
+*.class
+
+# Environment and credentials
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Operating system
+.DS_Store
+Thumbs.db
+
