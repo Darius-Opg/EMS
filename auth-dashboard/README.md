@@ -16,7 +16,7 @@ Provide the application's login, user administration, role-based access control,
 - Enforce `ADMIN`, `ORGANIZER`, and `STAFF` permissions in services as well as in navigation and UI.
 - Build the dashboard with event, attendee, ticket, check-in, and recent/upcoming-event statistics.
 - Maintain the single application entry point and login/dashboard navigation. Load the other modules' reusable Swing panels and pass the current session where needed.
-- Coordinate shared components: `DatabaseConnection`, `UserSession`, `ValidationUtil`, and `NotificationUtil`.
+- Coordinate shared components: `DatabaseConnection`, `UserSession`, `ValidationUtil`, and `NotificationUtil`. Show the shared notification feed in the role-gated Notifications tab.
 
 ## Required classes
 

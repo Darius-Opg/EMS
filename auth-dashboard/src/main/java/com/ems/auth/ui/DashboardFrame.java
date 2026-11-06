@@ -5,6 +5,7 @@ import com.ems.auth.service.AuthorizationService;
 import com.ems.rooms.service.RoomService;
 import com.ems.rooms.ui.RoomManagementPanel;
 import com.ems.shared.model.UserSession;
+import com.ems.shared.ui.NotificationPanel;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -83,7 +84,7 @@ public class DashboardFrame extends JFrame {
                     "com.ems.tickets.service.TicketService",
                     "com.ems.tickets.service.CheckInService"));
         if (authorization.canAccess(session, AuthorizationService.Feature.NOTIFICATIONS))
-            tabs.addTab("Notifications", unavailableModule("Notifications"));
+            tabs.addTab("Notifications", new NotificationPanel());
         add(tabs, BorderLayout.CENTER);
         setSize(1000, 650);
         setLocationRelativeTo(null);
