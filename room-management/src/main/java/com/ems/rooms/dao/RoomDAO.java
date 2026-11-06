@@ -156,7 +156,8 @@ public class RoomDAO {
     }
 
     private Room readRoom(ResultSet results) throws SQLException {
-        Integer eventId = (Integer) results.getObject("event_id");
+        long assignedEvent = results.getLong("event_id");
+        Integer eventId = results.wasNull() ? null : (int) assignedEvent;
         return new Room(results.getInt("room_id"), results.getString("room_name"),
                 results.getInt("capacity"), results.getInt("occupied"),
                 eventId, results.getString("room_status"));
