@@ -2,6 +2,8 @@ package com.ems.auth.ui;
 
 import com.ems.auth.service.AuthService;
 import com.ems.auth.service.AuthorizationService;
+import com.ems.rooms.service.RoomService;
+import com.ems.rooms.ui.RoomManagementPanel;
 import com.ems.shared.model.UserSession;
 
 import javax.swing.JFrame;
@@ -46,18 +48,40 @@ public class DashboardFrame extends JFrame {
         if (authorization.canAccess(session, AuthorizationService.Feature.MY_DUTIES))
             tabs.addTab("My duties", new StaffAssignmentPanel(session));
         if (authorization.canAccess(session, AuthorizationService.Feature.EVENTS))
-            tabs.addTab("Events", unavailableModule("Event management"));
+            tabs.addTab("Events", ModulePanelLoader.load(
+                    "com.ems.events.ui.EventManagementPanel", session,
+                    "Event management panel is not available yet.",
+                    "com.ems.events.service.EventService"));
         if (authorization.canAccess(session, AuthorizationService.Feature.ATTENDEES))
-            tabs.addTab("Attendees", unavailableModule("Attendee management"));
-        if (authorization.canAccess(session, AuthorizationService.Feature.TICKETS)
-                || authorization.canAccess(session, AuthorizationService.Feature.CHECK_IN))
-            tabs.addTab("Tickets and check-in", unavailableModule("Ticket and check-in"));
+            tabs.addTab("Attendees", ModulePanelLoader.load(
+                    "com.ems.attendees.ui.AttendeeManagementPanel", session,
+                    "Attendee management panel is not available yet.",
+                    "com.ems.attendees.service.RegistrationService",
+                    "com.ems.tickets.service.TicketService"));
+        if (authorization.canAccess(session, AuthorizationService.Feature.TICKETS))
+            tabs.addTab("Tickets", ModulePanelLoader.load(
+                    "com.ems.tickets.ui.TicketManagementPanel", session,
+                    "Ticket management panel is not available yet.",
+                    "com.ems.tickets.service.TicketService"));
+        if (authorization.canAccess(session, AuthorizationService.Feature.CHECK_IN))
+            tabs.addTab("Check-in", ModulePanelLoader.load(
+                    "com.ems.tickets.ui.CheckInPanel", session,
+                    "Check-in panel is not available yet.",
+                    "com.ems.tickets.service.CheckInService",
+                    "com.ems.tickets.service.TicketService"));
         if (authorization.canAccess(session, AuthorizationService.Feature.ROOMS))
-            tabs.addTab("Rooms", unavailableModule("Room management"));
+            tabs.addTab("Rooms", new RoomManagementPanel(new RoomService()));
         if (authorization.canAccess(session, AuthorizationService.Feature.VENDORS))
-            tabs.addTab("Vendors", unavailableModule("Vendor management"));
+            tabs.addTab("Vendors", ModulePanelLoader.load(
+                    "com.ems.events.ui.VendorManagementPanel", session,
+                    "Vendor management panel is not available yet.",
+                    "com.ems.events.service.EventService"));
         if (authorization.canAccess(session, AuthorizationService.Feature.ATTENDANCE_REPORTS))
-            tabs.addTab("Reports", unavailableModule("Attendance reports"));
+            tabs.addTab("Reports", ModulePanelLoader.load(
+                    "com.ems.tickets.ui.AttendanceReportPanel", session,
+                    "Attendance reports panel is not available yet.",
+                    "com.ems.tickets.service.TicketService",
+                    "com.ems.tickets.service.CheckInService"));
         if (authorization.canAccess(session, AuthorizationService.Feature.NOTIFICATIONS))
             tabs.addTab("Notifications", unavailableModule("Notifications"));
         add(tabs, BorderLayout.CENTER);
