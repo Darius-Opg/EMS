@@ -46,3 +46,5 @@ Keep SQL in DAOs and business rules in services. Use JDBC `PreparedStatement`s a
 ## Integration notes
 
 Coordinate shared API changes with every member. Module owners should expose reusable `JPanel`s and service methods; do not create separate application entry points or duplicate shared infrastructure.
+
+Dashboard module slots resolve the README-named panel classes once they extend `JPanel`. The loader passes the current `UserSession` and can construct required public no-argument module services for panel constructors. Until a module exposes a compatible panel, its tab shows an availability message.
