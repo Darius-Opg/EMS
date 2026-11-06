@@ -13,7 +13,7 @@ CREATE TABLE users (
     password_hash TEXT NOT NULL,
 
     role VARCHAR(20) NOT NULL
-        CHECK (role IN ('ADMIN', 'ORGANIZER', 'STAFF')),
+        CHECK (role IN ('ADMIN','ORGANIZER', 'STAFF')),
 
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -251,3 +251,44 @@ GROUP BY
     r.status,
     e.id,
     e.event_name;
+
+
+-- STAFF_ASSIGNMENT: event and/or room duties assigned to staff.
+CREATE TABLE staff_assignment (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    staff_id BIGINT NOT NULL,
+    event_id BIGINT,
+    room_id BIGINT,
+    duty VARCHAR(500) NOT NULL,
+    assigned_by BIGINT NOT NULL,
+    assigned_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_staff_assignment_staff
+        FOREIGN KEY (staff_id)
+        REFERENCES users(id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT fk_staff_assignment_event
+        FOREIGN KEY (event_id)
+        REFERENCES events(id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT fk_staff_assignment_room
+        FOREIGN KEY (room_id)
+        REFERENCES rooms(id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT fk_staff_assignment_organizer
+        FOREIGN KEY (assigned_by)
+        REFERENCES users(id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT chk_staff_assignment_target
+        CHECK (event_id IS NOT NULL OR room_id IS NOT NULL)
+);
+
+CREATE INDEX idx_staff_assignment_staff_id ON staff_assignment(staff_id);
+CREATE INDEX idx_staff_assignment_event_id ON staff_assignment(event_id);
+CREATE INDEX idx_staff_assignment_room_id ON staff_assignment(room_id);
+
+

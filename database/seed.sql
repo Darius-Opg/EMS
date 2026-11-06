@@ -1,0 +1,2 @@
+-- Add local or development INSERT statements below.
+-- DatabaseSeeder creates or refreshes the configured EMS_ADMIN_* account using EMS_ADMIN_ROLE (defaults to ADMIN).
