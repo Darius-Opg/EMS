@@ -1,6 +1,7 @@
 #maven
 target/
 /bin/
+/.maven-repository/
 
 #Java
 *.class
@@ -19,3 +20,5 @@ target/
 .DS_Store
 Thumbs.db
 
+# Java crash logs
+hs_err_pid*.log

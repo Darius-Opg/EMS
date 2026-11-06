@@ -41,6 +41,15 @@ Copy `.env.example` to `.env` and set local PostgreSQL credentials. `.env` is ig
 
 Use the shared `DatabaseConnection.getConnection()` for JDBC connections. Use `PreparedStatement` for SQL values and try-with-resources for JDBC resources.
 
+Set `EMS_DB_SEED_FILE` to the SQL file to run when loading seed data. The initial account uses `EMS_ADMIN_FULL_NAME`, `EMS_ADMIN_USERNAME`, `EMS_ADMIN_EMAIL`, `EMS_ADMIN_PASSWORD`, and optionally `EMS_ADMIN_ROLE` in `.env`. `EMS_ADMIN_ROLE` accepts `ADMIN`, `ORGANIZER`, or `STAFF` and defaults to `ADMIN`. After applying the schema, run `com.ems.auth.service.DatabaseSeeder` explicitly; it applies the configured SQL file and creates or refreshes the configured account with a PBKDF2 password hash in one transaction. Re-running it updates an existing account with the same username, including its configured role.
+
+From the project root, install the module dependencies and then run the seeder from its module (the `exec:java` goal must target `auth-dashboard`, not the root aggregator):
+
+```bash
+mvn "-Dmaven.repo.local=$PWD/.maven-repository" -pl auth-dashboard -am install -DskipTests
+mvn "-Dmaven.repo.local=$PWD/.maven-repository" -f auth-dashboard/pom.xml exec:java -Dexec.mainClass=com.ems.auth.service.DatabaseSeeder
+```
+
 ## Contribution workflow
 
 Work on the assigned feature branch, build the affected module with its dependencies, and open a pull request to `main`. Coordinate public service APIs and shared-component changes with the other module owners before integration.
