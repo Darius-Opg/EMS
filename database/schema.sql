@@ -95,8 +95,25 @@ CREATE TABLE attendees (
     phone VARCHAR(30),
 
     is_vip BOOLEAN NOT NULL DEFAULT FALSE,
+    vip_level VARCHAR(50),
+    special_requirements TEXT,
 
     registered_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT chk_attendees_vip_details
+        CHECK (
+            (
+                is_vip = TRUE
+                AND vip_level IS NOT NULL
+                AND LENGTH(BTRIM(vip_level)) > 0
+            )
+            OR
+            (
+                is_vip = FALSE
+                AND vip_level IS NULL
+                AND special_requirements IS NULL
+            )
+        ),
 
     CONSTRAINT fk_attendees_event
         FOREIGN KEY (event_id)
