@@ -6,6 +6,8 @@ import com.ems.tickets.service.CheckInService;
 import com.ems.tickets.service.TicketService;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 public class CheckInPanel extends JPanel {
@@ -60,6 +62,23 @@ public class CheckInPanel extends JPanel {
         validateButton.addActionListener(e -> validateTicket());
         checkInButton.addActionListener(e -> checkInAttendee());
 
+        ticketNumberField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent event) {
+                invalidateValidation();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent event) {
+                invalidateValidation();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent event) {
+                invalidateValidation();
+            }
+        });
+
         ticketNumberField.addActionListener(e -> validateTicket());
 
         formPanel.add(new JLabel("Enter Ticket Number:"));
@@ -89,13 +108,13 @@ public class CheckInPanel extends JPanel {
 
         String ticketNumber = ticketNumberField.getText().trim();
 
+        validatedTicket = null;
+        checkInButton.setEnabled(false);
+
         if (ticketNumber.isEmpty()) {
             showMessage("Please enter a ticket number.");
             return;
         }
-
-        validatedTicket = null;
-        checkInButton.setEnabled(false);
 
         try {
             Ticket ticket = checkInService.validateTicket(ticketNumber);
@@ -139,7 +158,7 @@ public class CheckInPanel extends JPanel {
 
         try {
             Ticket checkedInTicket = checkInService.checkIn(
-                    ticketNumberField.getText().trim(),
+                    validatedTicket.getTicketNumber(),
                     session
             );
 
@@ -160,6 +179,14 @@ public class CheckInPanel extends JPanel {
             checkInButton.setEnabled(false);
             detailsArea.append("\n\nCHECK-IN FAILED\n" + ex.getMessage());
             showError(ex.getMessage());
+        }
+    }
+
+    private void invalidateValidation() {
+        if (validatedTicket != null) {
+            validatedTicket = null;
+            checkInButton.setEnabled(false);
+            detailsArea.setText("Ticket number changed. Validate the ticket again before check-in.");
         }
     }
 

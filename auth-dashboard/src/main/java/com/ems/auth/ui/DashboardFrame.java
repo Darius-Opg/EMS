@@ -6,6 +6,11 @@ import com.ems.rooms.service.RoomService;
 import com.ems.rooms.ui.RoomManagementPanel;
 import com.ems.shared.model.UserSession;
 import com.ems.shared.ui.NotificationPanel;
+import com.ems.tickets.service.CheckInService;
+import com.ems.tickets.service.TicketService;
+import com.ems.tickets.ui.AttendanceReportPanel;
+import com.ems.tickets.ui.CheckInPanel;
+import com.ems.tickets.ui.TicketManagementPanel;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -60,16 +65,10 @@ public class DashboardFrame extends JFrame {
                     "com.ems.attendees.service.RegistrationService",
                     "com.ems.tickets.service.TicketService"));
         if (authorization.canAccess(session, AuthorizationService.Feature.TICKETS))
-            tabs.addTab("Tickets", ModulePanelLoader.load(
-                    "com.ems.tickets.ui.TicketManagementPanel", session,
-                    "Ticket management panel is not available yet.",
-                    "com.ems.tickets.service.TicketService"));
+            tabs.addTab("Tickets", new TicketManagementPanel(session, new TicketService()));
         if (authorization.canAccess(session, AuthorizationService.Feature.CHECK_IN))
-            tabs.addTab("Check-in", ModulePanelLoader.load(
-                    "com.ems.tickets.ui.CheckInPanel", session,
-                    "Check-in panel is not available yet.",
-                    "com.ems.tickets.service.CheckInService",
-                    "com.ems.tickets.service.TicketService"));
+            tabs.addTab("Check-in", new CheckInPanel(
+                    session, new CheckInService(), new TicketService()));
         if (authorization.canAccess(session, AuthorizationService.Feature.ROOMS))
             tabs.addTab("Rooms", new RoomManagementPanel(new RoomService()));
         if (authorization.canAccess(session, AuthorizationService.Feature.VENDORS))
@@ -78,11 +77,8 @@ public class DashboardFrame extends JFrame {
                     "Vendor management panel is not available yet.",
                     "com.ems.events.service.EventService"));
         if (authorization.canAccess(session, AuthorizationService.Feature.ATTENDANCE_REPORTS))
-            tabs.addTab("Reports", ModulePanelLoader.load(
-                    "com.ems.tickets.ui.AttendanceReportPanel", session,
-                    "Attendance reports panel is not available yet.",
-                    "com.ems.tickets.service.TicketService",
-                    "com.ems.tickets.service.CheckInService"));
+            tabs.addTab("Reports", new AttendanceReportPanel(
+                    session, new TicketService(), new CheckInService()));
         if (authorization.canAccess(session, AuthorizationService.Feature.NOTIFICATIONS))
             tabs.addTab("Notifications", new NotificationPanel());
         add(tabs, BorderLayout.CENTER);
