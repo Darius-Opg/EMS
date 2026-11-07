@@ -2,6 +2,8 @@ package com.ems.auth.ui;
 
 import com.ems.auth.service.AuthService;
 import com.ems.auth.service.AuthorizationService;
+import com.ems.attendees.service.RegistrationService;
+import com.ems.attendees.ui.AttendeeManagementPanel;
 import com.ems.rooms.service.RoomService;
 import com.ems.rooms.ui.RoomManagementPanel;
 import com.ems.shared.model.UserSession;
@@ -59,11 +61,8 @@ public class DashboardFrame extends JFrame {
                     "Event management panel is not available yet.",
                     "com.ems.events.service.EventService"));
         if (authorization.canAccess(session, AuthorizationService.Feature.ATTENDEES))
-            tabs.addTab("Attendees", ModulePanelLoader.load(
-                    "com.ems.attendees.ui.AttendeeManagementPanel", session,
-                    "Attendee management panel is not available yet.",
-                    "com.ems.attendees.service.RegistrationService",
-                    "com.ems.tickets.service.TicketService"));
+            tabs.addTab("Attendees", new AttendeeManagementPanel(
+                    session, new RegistrationService()));
         if (authorization.canAccess(session, AuthorizationService.Feature.TICKETS))
             tabs.addTab("Tickets", new TicketManagementPanel(session, new TicketService()));
         if (authorization.canAccess(session, AuthorizationService.Feature.CHECK_IN))
