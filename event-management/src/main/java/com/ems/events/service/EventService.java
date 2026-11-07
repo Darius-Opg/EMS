@@ -82,7 +82,8 @@ public class EventService {
         try {
             return eventDAO.delete(eventId);
         } catch (SQLException e) {
-            if ("23503".equals(e.getSQLState())) {
+            if ("23503".equals(e.getSQLState())
+                    || "23001".equals(e.getSQLState())) {
                 throw new SQLException(
                         "This event cannot be deleted because it is linked to attendees, rooms, or staff assignments.",
                         e
