@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class DashboardDAO {
             while (results.next()) {
                 events.add(new UpcomingEvent(results.getString("event_name"),
                         results.getString("venue"),
-                        results.getTimestamp("starts_at").toLocalDateTime()));
+                        results.getObject("starts_at", OffsetDateTime.class)));
             }
             return List.copyOf(events);
         }
@@ -61,6 +62,6 @@ public class DashboardDAO {
     }
 
     public record UpcomingEvent(String name, String venue,
-                                java.time.LocalDateTime startsAt) {
+                                OffsetDateTime startsAt) {
     }
 }

@@ -25,8 +25,8 @@ public class EventDAO {
             stmt.setString(1, event.getName());
             stmt.setString(2, event.getDescription());
             stmt.setString(3, event.getVenue());
-            stmt.setTimestamp(4, Timestamp.valueOf(event.getStartDateTime()));
-            stmt.setTimestamp(5, Timestamp.valueOf(event.getEndDateTime()));
+            stmt.setObject(4, event.getStartDateTime());
+            stmt.setObject(5, event.getEndDateTime());
             stmt.setString(6, event.getStatus());
             stmt.setLong(7, event.getCreatedBy());
 
@@ -113,8 +113,8 @@ public class EventDAO {
             stmt.setString(1, event.getName());
             stmt.setString(2, event.getDescription());
             stmt.setString(3, event.getVenue());
-            stmt.setTimestamp(4, Timestamp.valueOf(event.getStartDateTime()));
-            stmt.setTimestamp(5, Timestamp.valueOf(event.getEndDateTime()));
+            stmt.setObject(4, event.getStartDateTime());
+            stmt.setObject(5, event.getEndDateTime());
             stmt.setString(6, event.getStatus());
             stmt.setLong(7, event.getEventId());
 
@@ -142,12 +142,8 @@ public class EventDAO {
         event.setName(rs.getString("event_name"));
         event.setDescription(rs.getString("description"));
         event.setVenue(rs.getString("venue"));
-        event.setStartDateTime(
-                rs.getTimestamp("starts_at").toLocalDateTime()
-        );
-        event.setEndDateTime(
-                rs.getTimestamp("ends_at").toLocalDateTime()
-        );
+        event.setStartDateTime(rs.getObject("starts_at", java.time.OffsetDateTime.class));
+        event.setEndDateTime(rs.getObject("ends_at", java.time.OffsetDateTime.class));
         event.setStatus(rs.getString("status"));
         event.setCreatedBy(rs.getLong("created_by"));
 

@@ -28,6 +28,8 @@ Create, schedule, monitor, and maintain events, along with vendors associated wi
 
 This module owns `events` and `vendors`. Events reference their creator in `users`; vendors reference an event. Use `DatabaseConnection.getConnection()`, JDBC `PreparedStatement`s, and try-with-resources. Use `UserSession` for the creator ID and authorization. Keep SQL out of Swing components and business rules in services.
 
+Event start and end values are entered and displayed in East Africa Time (`Africa/Nairobi`). Store them as instants in PostgreSQL `TIMESTAMPTZ` columns, use `OffsetDateTime` at the JDBC boundary, and convert to `Africa/Nairobi` for input and display. PostgreSQL stores the instant, not the original timezone label.
+
 ## Done when
 
 - Authorized users can create, view, update, search, filter, and manage event status.
