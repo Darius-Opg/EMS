@@ -79,7 +79,7 @@ CREATE TABLE vendors (
     CONSTRAINT fk_vendors_event
         FOREIGN KEY (event_id)
         REFERENCES events(id)
-        ON DELETE CASCADE
+        ON DELETE RESTRICT
 );
 
 CREATE INDEX idx_vendors_event_id ON vendors(event_id);
