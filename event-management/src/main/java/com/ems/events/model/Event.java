@@ -1,6 +1,6 @@
 package com.ems.events.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public class Event {
 
@@ -8,8 +8,8 @@ public class Event {
     private String name;
     private String description;
     private String venue;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
+    private OffsetDateTime startDateTime;
+    private OffsetDateTime endDateTime;
     private String status;
     private long createdBy;
 
@@ -17,8 +17,8 @@ public class Event {
     }
 
     public Event(long eventId, String name, String description,
-                 String venue, LocalDateTime startDateTime,
-                 LocalDateTime endDateTime, String status,
+                 String venue, OffsetDateTime startDateTime,
+                 OffsetDateTime endDateTime, String status,
                  long createdBy) {
         this.eventId = eventId;
         this.name = name;
@@ -62,19 +62,19 @@ public class Event {
         this.venue = venue;
     }
 
-    public LocalDateTime getStartDateTime() {
+    public OffsetDateTime getStartDateTime() {
         return startDateTime;
     }
 
-    public void setStartDateTime(LocalDateTime startDateTime) {
+    public void setStartDateTime(OffsetDateTime startDateTime) {
         this.startDateTime = startDateTime;
     }
 
-    public LocalDateTime getEndDateTime() {
+    public OffsetDateTime getEndDateTime() {
         return endDateTime;
     }
 
-    public void setEndDateTime(LocalDateTime endDateTime) {
+    public void setEndDateTime(OffsetDateTime endDateTime) {
         this.endDateTime = endDateTime;
     }
 

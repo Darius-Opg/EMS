@@ -4,12 +4,12 @@ package com.ems.events.ui;
 import com.ems.events.model.Event;
 import com.ems.events.service.EventService;
 import com.ems.shared.model.UserSession;
+import com.ems.shared.utils.EventTime;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
@@ -23,9 +23,6 @@ public class EventManagementPanel extends JPanel {
     private final JTextField searchField;
     private final JComboBox<String> statusFilter;
 
-    private static final DateTimeFormatter DATE_FORMAT =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
     private static final String[] STATUSES = {
             "UPCOMING", "ONGOING", "COMPLETED", "CANCELLED"
     };
@@ -38,7 +35,7 @@ public class EventManagementPanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
         tableModel = new DefaultTableModel(
-                new String[]{"ID", "Event Name", "Venue", "Start", "End", "Status"}, 0
+                new String[]{"ID", "Event Name", "Venue", "Start (EAT)", "End (EAT)", "Status"}, 0
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -268,11 +265,11 @@ public class EventManagementPanel extends JPanel {
         );
 
         JTextField startField = new JTextField(
-                existing == null ? "" : formatDate(existing.getStartDateTime())
+                existing == null ? "" : EventTime.formatInput(existing.getStartDateTime())
         );
 
         JTextField endField = new JTextField(
-                existing == null ? "" : formatDate(existing.getEndDateTime())
+                existing == null ? "" : EventTime.formatInput(existing.getEndDateTime())
         );
 
         JComboBox<String> statusBox = new JComboBox<>(STATUSES);
@@ -292,10 +289,10 @@ public class EventManagementPanel extends JPanel {
         form.add(new JLabel("Venue:"));
         form.add(venueField);
 
-        form.add(new JLabel("Start (yyyy-MM-dd HH:mm):"));
+        form.add(new JLabel("Start (" + EventTime.ZONE_LABEL + "; yyyy-MM-dd HH:mm):"));
         form.add(startField);
 
-        form.add(new JLabel("End (yyyy-MM-dd HH:mm):"));
+        form.add(new JLabel("End (" + EventTime.ZONE_LABEL + "; yyyy-MM-dd HH:mm):"));
         form.add(endField);
 
         form.add(new JLabel("Status:"));
@@ -314,13 +311,8 @@ public class EventManagementPanel extends JPanel {
         }
 
         try {
-            LocalDateTime start = LocalDateTime.parse(
-                    startField.getText().trim(), DATE_FORMAT
-            );
-
-            LocalDateTime end = LocalDateTime.parse(
-                    endField.getText().trim(), DATE_FORMAT
-            );
+            OffsetDateTime start = EventTime.parseInput(startField.getText().trim());
+            OffsetDateTime end = EventTime.parseInput(endField.getText().trim());
 
             Event event = existing == null ? new Event() : existing;
 
@@ -334,13 +326,14 @@ public class EventManagementPanel extends JPanel {
             return event;
 
         } catch (DateTimeParseException e) {
-            showError("Invalid date format. Use yyyy-MM-dd HH:mm.");
+            showError("Invalid date format. Use yyyy-MM-dd HH:mm in "
+                    + EventTime.ZONE_LABEL + ".");
             return null;
         }
     }
 
-    private String formatDate(LocalDateTime date) {
-        return date == null ? "" : date.format(DATE_FORMAT);
+    private String formatDate(OffsetDateTime date) {
+        return EventTime.formatDisplay(date);
     }
 
     private void showMessage(String message) {

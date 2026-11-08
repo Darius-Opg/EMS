@@ -4,6 +4,7 @@ import com.ems.auth.dao.DashboardDAO;
 import com.ems.auth.dao.DashboardDAO.DashboardSummary;
 import com.ems.auth.dao.DashboardDAO.UpcomingEvent;
 import com.ems.shared.model.UserSession;
+import com.ems.shared.utils.EventTime;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -15,14 +16,10 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.sql.SQLException;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /** Dashboard summary backed by aggregate data from the shared database. */
 public class DashboardPanel extends JPanel {
-
-    private static final DateTimeFormatter EVENT_DATE =
-            DateTimeFormatter.ofPattern("EEE, d MMM yyyy HH:mm");
 
     private final DashboardDAO dashboardDAO;
     private final JLabel status = new JLabel(" ");
@@ -101,7 +98,7 @@ public class DashboardPanel extends JPanel {
             eventModel.setRowCount(0);
             for (UpcomingEvent event : summary.upcomingEvents()) {
                 eventModel.addRow(new Object[]{event.name(), event.venue(),
-                        EVENT_DATE.format(event.startsAt())});
+                        EventTime.formatDisplay(event.startsAt())});
             }
             status.setText(" ");
         } catch (SQLException | RuntimeException exception) {
